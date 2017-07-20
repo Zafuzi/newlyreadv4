@@ -1,16 +1,14 @@
-import json
-import urllib2
+import sched, time, urllib2, json, unirest, redis, datetime
 from flask import Flask, request, render_template, Markup, send_from_directory
 from newspaper import Article
-import unirest
-import redis
-import datetime
+
 
 API_KEY = 'ccfdc66609fc4b7b87258020b85d4380'
 BASE_URL = 'https://newsapi.org/v1/'
 sources = ""
 json_sources = ""
 articles = []
+s = sched.scheduler(time.time, time.sleep)
 
 app = Flask(__name__)
 app.debug = True
@@ -63,7 +61,8 @@ def check_timestamp():
         get_sources()
     print("Timestamp OK")
 
-def main():
+def getNewArticles(sc):
+    print("Getting new articles")
     rsources = r.get('sources')
     rsources = json.loads(rsources)['sources']
     rtimestamp = None
@@ -76,9 +75,7 @@ def main():
     else:
         check_timestamp()
         print("Got new sources")
-    app.run(host= '0.0.0.0')
-
-    
+    s.enter(1200, 1, getNewArticles, (sc,))
 
 # @app.route('/scripts/<path:path>')
 # def send_scripts(path):
@@ -118,6 +115,12 @@ def getCategory(category = ""):
         for article in data['articles']:
             articles.append(article)
     return render_template("category.html", articles = articles)
+
+def main():
+    s = sched.scheduler(time.time, time.sleep)
+    s.enter(1200, 1, getNewArticles, (s,))
+    s.run()
+    app.run(host= '0.0.0.0')
 
 if __name__ == "__main__":
     main()
