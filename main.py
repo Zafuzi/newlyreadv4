@@ -118,9 +118,10 @@ def getCategory(category = ""):
 
 def main():
     s = sched.scheduler(time.time, time.sleep)
-    s.enter(1200, 1, getNewArticles, (s,))
+    s.enter(1, 1, getNewArticles, (s,))
     s.run()
     app.run(host= '0.0.0.0')
 
 if __name__ == "__main__":
     main()
+
