@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/styles/styles.css" rel="stylesheet">
+</head>
+
+<body class="home">
+    <header>
+        <a class="btn" href="javascript:history.back()">Back</a>
+        <a class="btn" href="{{url}}" target="_blank">Original Article</a>
+    </header>
+    <main>
+
+        <div class="article">
+            <h1>{{title}}</h1>
+            <img src="{{header_image}}" alt="Article Image" /> {% if video %} {% for vid in video %}
+            <div class="video-container">
+                <iframe src="{{vid}}" controls></iframe> {% endfor %} {% endif %}
+            </div>
+            <div class="article"> {{body}} </div>
+        </div>
+    </main>
+</body>
+
+</html>
