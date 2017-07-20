@@ -43,7 +43,9 @@ def set_timestamp():
     r.set('sources_timestamp', now.month)
 
 def check_timestamp():
-    rtimestamp = int(r.get('sources_timestamp'))
+    rtimestamp = r.get('sources_timestamp')
+    if rtimestamp:
+        rtimestamp = int(rtimestamp)
     now = datetime.datetime.now()
     if not rtimestamp is None:
         if not rtimestamp == now.month:
@@ -74,7 +76,7 @@ def main():
     else:
         check_timestamp()
         print("Got new sources")
-    app.run()
+    app.run(host= '0.0.0.0')
 
     
 
