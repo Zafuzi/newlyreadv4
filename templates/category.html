@@ -7,16 +7,24 @@
 </head>
 
 <body class="home">
-    <header>
-        <a class="btn" href="javascript:history.back()">Back</a>
+    <header id="sticker">
+        <a class=" btn " href="javascript:history.back() ">Back</a>
     </header>
-    <main class="flow-row">
+    <main class="flow-row ">
         {% for source in articles %}
-        <a class="card" href="/article?url={{source['url']}}">
-            <img src="{{source['urlToImage']}}" alt="Article Image">
+        <a class="card " href="/article?url={{source[ 'url']}} ">
+            <img src="{{source[ 'urlToImage']}} " alt="Article Image ">
             <p>{{source['title']}}</p>
         </a> {% endfor %}
     </main>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js " integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=" anonymous "></script>
+    <script src="static/scripts/jquery.sticky.js "></script>
+    <script>
+        $(document).ready(function() {
+            var sticky = new Sticky('#sticker');
+        });
+    </script>
 </body>
 
 </html>

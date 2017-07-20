@@ -7,11 +7,10 @@
 </head>
 
 <body class="home">
-    <header class="banner">
+    <header id="sticker">
         <h1> NEWLYREAD </h1>
-        <p> Read the News </p>
     </header>
-    <main>
+    <main style="margin-top: 4em; margin-bottom: -4em; max-width: 900px;">
         <div class="categories">
             <a class="btn" href="/category?cat=business">Business</a>
             <a class="btn" href="/category?cat=entertainment">Entertainment</a>
@@ -23,6 +22,14 @@
             <a class="btn" href="/category?cat=sports">Sports</a>
             <a class="btn" href="/category?cat=technology">Technology</a>
         </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="static/scripts/jquery.sticky.js"></script>
+        <script>
+            $(document).ready(function() {
+                var sticky = new Sticky('#sticker');
+            });
+        </script>
     </main>
 </body>
 

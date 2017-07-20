@@ -6,13 +6,12 @@
     <link href="static/styles/styles.css" rel="stylesheet">
 </head>
 
-<body class="home">
-    <header>
+<body class="reader">
+    <header id="sticker">
         <a class="btn" href="javascript:history.back()">Back</a>
         <a class="btn" href="{{url}}" target="_blank">Original Article</a>
     </header>
     <main>
-
         <div class="article">
             <h1>{{title}}</h1>
             <img src="{{header_image}}" alt="Article Image" /> {% if video %} {% for vid in video %}
@@ -21,6 +20,14 @@
             </div>
             <div class="article"> {{body}} </div>
         </div>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="static/scripts/jquery.sticky.js"></script>
+        <script>
+            $(document).ready(function() {
+                var sticky = new Sticky('#sticker');
+            });
+        </script>
     </main>
 </body>
 
