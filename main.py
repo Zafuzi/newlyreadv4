@@ -1,4 +1,4 @@
-import sched, time, urllib2, json, unirest, redis, datetime
+import sched, threading, time, urllib2, json, unirest, redis, datetime
 from flask import Flask, request, render_template, Markup, send_from_directory
 from newspaper import Article
 
@@ -8,18 +8,18 @@ BASE_URL = 'https://newsapi.org/v1/'
 sources = ""
 json_sources = ""
 articles = []
-s = sched.scheduler(time.time, time.sleep)
 
 app = Flask(__name__)
 app.debug = True
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
+s = sched.scheduler(time.time, time.sleep)
 
 rsources = r.get('sources')
 rtimestamp = None
 
 def get_sources():
-    sources = urllib2.urlopen(BASE_URL + "/sources").read()
+    sources = urllib2.urlopen(BASE_URL + "/sources?language=en").read()
     r.set('sources', sources)
     # change later to avoid DB call
     rsources = r.get('sources')
@@ -61,11 +61,12 @@ def check_timestamp():
         get_sources()
     print("Timestamp OK")
 
-def getNewArticles(sc):
+def getNewArticles():
     print("Getting new articles")
     rsources = r.get('sources')
-    rsources = json.loads(rsources)['sources']
-    rtimestamp = None
+    if rsources:
+        rsources = json.loads(rsources)['sources']
+        rtimestamp = None
     if rsources and len(rsources) > 0:
         check_timestamp()
         for source in rsources:
@@ -75,7 +76,6 @@ def getNewArticles(sc):
     else:
         check_timestamp()
         print("Got new sources")
-    s.enter(1200, 1, getNewArticles, (sc,))
 
 # @app.route('/scripts/<path:path>')
 # def send_scripts(path):
@@ -90,18 +90,54 @@ def index():
     return render_template("index.html", articles = articles)
 
 @app.route('/article')
-def getArticle(url = None):
+def getArticle(url = None, category = None):
+
     url = request.args.get('url')
-    article = Article(url, keep_article_html=True)
-    article.download()
-    article.parse()
-    print(article.title)
-    return render_template("article.html", 
-                            url=url, 
-                            title=article.title, 
-                            body= Markup(article.article_html), 
-                            header_image = article.top_image,
-                            video = article.movies)
+    url_string = url.replace(':', '')
+
+    print("url:", url)
+    print("url_string:", url_string)
+
+    category = request.args.get('category')
+
+    isHTML = False
+
+    title = ""
+    html = ""
+    img = ""
+    movies = []
+
+    for key in r.keys(pattern="html:" + category + ":" + url_string):
+        data = r.get(key)
+        data = json.loads(data)
+        isHTML = True
+        print(key)
+
+    if isHTML:
+        title = data['title']
+        html = data['html']
+        img = data['img']
+        movies = data['movies']
+        print("LOADED FROM DB")
+    else:
+        article = Article(url, keep_article_html=True)
+        article.download()
+        article.parse()
+        html = article.article_html
+        img = article.top_image
+        movies = article.movies
+
+        print("CATEGROY: ", category)
+        print("Title: ", article.title)
+        r.set('html:' + category + ":" + url_string, 
+                        json.dumps({"title": title, "html": html, "img": img, "movies": movies}))
+
+    return render_template("article.html",
+                            url = url,
+                            title = title, 
+                            body = Markup(html), 
+                            header_image = img,
+                            video = movies)
 
 @app.route('/category')
 def getCategory(category = ""):
@@ -114,13 +150,17 @@ def getCategory(category = ""):
         data = json.loads(data)
         for article in data['articles']:
             articles.append(article)
-    return render_template("category.html", articles = articles)
+    return render_template("category.html", articles = articles, category= category)
+
+
+def func1():
+    t = threading.Thread(target=getNewArticles)
+    t.start()
+    getNewArticles()
 
 def main():
-    s = sched.scheduler(time.time, time.sleep)
-    s.enter(1, 1, getNewArticles, (s,))
-    s.run()
-    app.run(host= '0.0.0.0')
+    func1()
+    app.run(host= '0.0.0.0', port=5500)
 
 if __name__ == "__main__":
     main()

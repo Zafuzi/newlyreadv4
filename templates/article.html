@@ -14,17 +14,18 @@
     <main>
         <div class="article">
             <h1>{{title}}</h1>
-            <img src="{{header_image}}" alt="Article Image" /> {% if video %} {% for vid in video %}
+            <!-- <img src="{{header_image}}" alt="Article Image" /> -->{% if video %} {% for vid in video %}
             <div class="video-container">
                 <iframe src="{{vid}}" controls></iframe> {% endfor %} {% endif %}
             </div>
             <div class="article"> {{body}} </div>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
         <script src="static/scripts/jquery.sticky.js"></script>
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 var sticky = new Sticky('#sticker');
             });
         </script>
