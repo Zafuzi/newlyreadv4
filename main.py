@@ -105,6 +105,7 @@ def getArticle(url = None, category = None):
         if request.headers.getlist("X-Forwarded-For"):
             ip = request.headers.getlist("X-Forwarded-For")[0]
         print(str.format("IP: {0}, Article: {1}", ip, url))
+        print(request.access_route[-1])
     except:
         print("ERROR GETTING IP ADDRESS OR KEY")
 
@@ -137,7 +138,6 @@ def getArticle(url = None, category = None):
         html = article.article_html
         img = article.top_image
         movies = article.movies
-
         print("CATEGROY: ", category)
         print("Title: ", article.title)
         r.set('html:' + category + ":" + url_string, 
