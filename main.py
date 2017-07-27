@@ -113,11 +113,13 @@ def getArticle(url = None, category = None):
     html = ""
     img = ""
     movies = []
-
-    for key in r.keys(pattern="html:" + category + ":" + url_string):
-        data = r.get(key)
-        data = json.loads(data)
-        isHTML = True
+    try:
+        for key in r.keys(pattern="html:" + category + ":" + url_string):
+            data = r.get(key)
+            data = json.loads(data)
+            isHTML = True
+    except:
+        print("Error fetching keys for article: " + url)
 
     if isHTML:
         title = data['title']
