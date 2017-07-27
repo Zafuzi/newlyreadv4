@@ -1,55 +1,11 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/styles/styles.css" rel="stylesheet">
-</head>
-
-<body class="home">
-    <header id="sticker">
-        <nav>
-            <h1> NEWLYREAD </h1>
-            <a class="btn" href="javascript:history.back()">Back</a>
-            <div>
-                Category:
-                <select>
-                    <option disabled> Choose a news category </option>
-                    <option value="/category?cat=business">Business</option>
-                    <option value="/category?cat=entertainment">Entertainment</option>
-                    <option value="/category?cat=gaming">Gaming</option>
-                    <option value="/category?cat=general">General</option>
-                    <option value="/category?cat=music">Music</option>
-                    <option value="/category?cat=politics">Politics</option>
-                    <option value="/category?cat=science-and-nature">Science and Nature</option>
-                    <option value="/category?cat=sport">Sports</option>
-                    <option value="/category?cat=technology">Technology</option>
-                </select>
-            </div>
-        </nav>
-    </header>
-    <main class="flow-row categories" style="margin-top: 4em; margin-bottom: -4em; max-width: 900px;">
-        {% for source in articles %}
-        <a class="card" href="/article?url={{source[ 'url']}}&category={{category}}">
-            <div class="card-content">
-                <img src="{{source[ 'urlToImage']}} " alt="Article Image ">
-                <p>{{source['title']}}</p>
-            </div>
-        </a>{% endfor %}
-    </main>
-
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js " integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin=" anonymous "></script>
-    <script src="static/scripts/jquery.sticky.js "></script>
-    <script>
-        $(document).ready(function () {
-            var sticky = new Sticky('#sticker');
-            $('#sticker nav select').change(function () {
-                var option = $(this).val();
-                window.location.href = option;
-            });
-        });
-    </script>
-</body>
-
-</html>
+{% extends "layout.html" %} {% block back_btn %}
+<a class="btn" href="/">Back</a> {% endblock %} {% block content %}
+<div class="categories">
+    {% for source in articles %}
+    <a class="card" href="/article?url={{source[ 'url']}}&category={{category}}">
+        <div class="card-content">
+            <img src="{{source[ 'urlToImage']}} " alt="Article Image ">
+            <p>{{source['title']}}</p>
+        </div>
+    </a>{% endfor %}
+</div> {% endblock %}

@@ -1,39 +1,13 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/styles/styles.css" rel="stylesheet">
-</head>
-
-<body class="reader">
-    <header id="sticker">
-        <a class="btn" href="javascript:history.back()">Back</a>
-        <a class="btn" href="{{url}}" target="_blank">Original Article</a>
-    </header>
-    <main style="margin-top: 4em; margin-bottom: -4em; max-width: 900px;">
-        <div class="article">
-            <h1>{{title}}</h1>
-            <!-- <img src="{{header_image}}" alt="Article Image" /> -->{% if video %} {% for vid in video %}
-            <div class="video-container">
-                <iframe src="{{vid}}" controls></iframe> {% endfor %} {% endif %}
-            </div>
-            <div class="article"> {{body}} </div>
-        </div>
-
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
-        <script src="static/scripts/jquery.sticky.js"></script>
-        <script>
-            $(document).ready(function () {
-                var sticky = new Sticky('#sticker');
-                $('#sticker nav select').change(function () {
-                    var option = $(this).val();
-                    window.location.href = option;
-                });
-            });
-        </script>
-    </main>
-</body>
-
-</html>
+{% extends "layout.html" %}
+{% block back_btn %}
+<a class="btn" href="javascript:history.back()">Back</a>
+<a class="btn" href="{{url}}" target="_blank">Original Article</a> {% endblock %} {% block content %}
+<div class="article">
+    <h1>{{title}}</h1>
+    <!-- <img src="{{header_image}}" alt="Article Image" /> -->{% if video %} {% for vid in video %}
+    <div class="video-container">
+        <iframe src="{{vid}}" controls></iframe> {% endfor %} {% endif %}
+    </div>
+    <div class="article"> {{body}} </div>
+</div>
+{% endblock %}

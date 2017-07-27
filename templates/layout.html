@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/styles/styles.css" rel="stylesheet">
+</head>
+
+<body class="home">
+    <header id="sticker">
+        <nav>
+            <h1> NEWLYREAD </h1>
+            <span>{% block back_btn %} {% endblock %}</span>
+            <div>
+                Category:
+                <select>
+                    <option disabled> Choose a news category </option>
+                    <option value="/category?cat=business">Business</option>
+                    <option value="/category?cat=entertainment">Entertainment</option>
+                    <option value="/category?cat=gaming">Gaming</option>
+                    <option value="/category?cat=general">General</option>
+                    <option value="/category?cat=music">Music</option>
+                    <option value="/category?cat=politics">Politics</option>
+                    <option value="/category?cat=science-and-nature">Science and Nature</option>
+                    <option value="/category?cat=sports">Sports</option>
+                    <option value="/category?cat=technology">Technology</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+    <main class="home" style="margin-top: 4em; margin-bottom: -4em; max-width: 900px;">
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+        <script src="static/scripts/jquery.sticky.js"></script>
+        <script>
+            $(document).ready(function () {
+                var sticky = new Sticky('#sticker');
+                $('#sticker nav select').change(function () {
+                    var option = $(this).val();
+                    window.location.href = option;
+                });
+            });
+        </script>
+        <script defer>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-73276036-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    </main>
+</body>
+
+</html>
