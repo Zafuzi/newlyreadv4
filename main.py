@@ -98,7 +98,7 @@ def index():
     remote_addr = next((addr for addr in reversed(route) 
                         if addr not in trusted_proxies), request.remote_addr)
 
-    print(remote_addr)
+    print("REMOTE:" + remote_addr)
     return render_template("index.html", articles = articles)
 
 @app.route('/article')
