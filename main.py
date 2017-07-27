@@ -92,6 +92,13 @@ def send_styles(path):
 
 @app.route('/')
 def index():
+    trusted_proxies = {'127.0.0.1'}  # define your own set
+    route = request.access_route + [request.remote_addr]
+
+    remote_addr = next((addr for addr in reversed(route) 
+                        if addr not in trusted_proxies), request.remote_addr)
+
+    print(remote_addr)
     return render_template("index.html", articles = articles)
 
 @app.route('/article')
@@ -100,7 +107,7 @@ def getArticle(url = None, category = None):
     url_string = url.replace(':', '')
 
     try:
-        ip = request.remote_addr
+        ip = request.environ['REMOTE_ADDR']
         if request.headers.get('X-Forwarded-For'):
             ip = request.headers.get('X-Forwarded-For', ip)
         print(str.format("IP: {0}, Article: {1}", ip, url))
@@ -123,7 +130,7 @@ def getArticle(url = None, category = None):
             isHTML = True
     except:
         print("Error fetching keys for article: " + url)
-        
+
     if category:
         if isHTML:
             title = data['title']
