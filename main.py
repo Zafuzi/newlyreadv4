@@ -96,7 +96,6 @@ def index():
 
 @app.route('/article')
 def getArticle(url = None, category = None):
-
     url = request.args.get('url')
     url_string = url.replace(':', '')
 
@@ -124,24 +123,25 @@ def getArticle(url = None, category = None):
             isHTML = True
     except:
         print("Error fetching keys for article: " + url)
-
-    if isHTML:
-        title = data['title']
-        html = data['html']
-        img = data['img']
-        movies = data['movies']
-        print("LOADED FROM DB")
-    else:
-        article = Article(url, keep_article_html=True)
-        article.download()
-        article.parse()
-        html = article.article_html
-        img = article.top_image
-        movies = article.movies
-        print("CATEGROY: ", category)
-        print("Title: ", article.title)
-        r.set('html:' + category + ":" + url_string, 
-                        json.dumps({"title": title, "html": html, "img": img, "movies": movies}))
+        
+    if category:
+        if isHTML:
+            title = data['title']
+            html = data['html']
+            img = data['img']
+            movies = data['movies']
+            print("LOADED FROM DB")
+        else:
+            article = Article(url, keep_article_html=True)
+            article.download()
+            article.parse()
+            html = article.article_html
+            img = article.top_image
+            movies = article.movies
+            print("CATEGROY: ", category)
+            print("Title: ", article.title)
+            r.set('html:' + category + ":" + url_string, 
+                            json.dumps({"title": title, "html": html, "img": img, "movies": movies}))
 
     return render_template("article.html",
                             url = url,
