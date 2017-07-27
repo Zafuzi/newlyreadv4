@@ -8,7 +8,24 @@
 
 <body class="home">
     <header id="sticker">
-        <h1> NEWLYREAD </h1>
+        <nav>
+            <h1> NEWLYREAD </h1>
+            <div>
+                Category: 
+                <select>
+                    <option disabled> Choose a news category </option>
+                    <option value="/category?cat=business">Business</option>
+                    <option value="/category?cat=entertainment">Entertainment</option>
+                    <option value="/category?cat=gaming">Gaming</option>
+                    <option value="/category?cat=general">General</option>
+                    <option value="/category?cat=music">Music</option>
+                    <option value="/category?cat=politics">Politics</option>
+                    <option value="/category?cat=science-and-nature">Science and Nature</option>
+                    <option value="/category?cat=sports">Sports</option>
+                    <option value="/category?cat=technology">Technology</option>
+                </select>
+            </div>
+        </nav>
     </header>
     <main class="home" style="margin-top: 4em; margin-bottom: -4em; max-width: 900px;">
         <div class="categories">
@@ -19,7 +36,7 @@
             <a class="btn" href="/category?cat=music">Music</a>
             <a class="btn" href="/category?cat=politics">Politics</a>
             <a class="btn" href="/category?cat=science-and-nature">Science and Nature</a>
-            <a class="btn" href="/category?cat=sports">Sports</a>
+            <a class="btn" href="/category?cat=sport">Sports</a>
             <a class="btn" href="/category?cat=technology">Technology</a>
         </div>
 
@@ -28,6 +45,10 @@
         <script>
             $(document).ready(function() {
                 var sticky = new Sticky('#sticker');
+                $('#sticker nav select').change( function () {
+                    var option = $(this).val();
+                    window.location.href = option;
+                });
             });
         </script>
     </main>

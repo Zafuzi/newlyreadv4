@@ -11,7 +11,7 @@
         <a class="btn" href="javascript:history.back()">Back</a>
         <a class="btn" href="{{url}}" target="_blank">Original Article</a>
     </header>
-    <main>
+    <main style="margin-top: 4em; margin-bottom: -4em; max-width: 900px;">
         <div class="article">
             <h1>{{title}}</h1>
             <!-- <img src="{{header_image}}" alt="Article Image" /> -->{% if video %} {% for vid in video %}
@@ -27,6 +27,10 @@
         <script>
             $(document).ready(function () {
                 var sticky = new Sticky('#sticker');
+                $('#sticker nav select').change(function () {
+                    var option = $(this).val();
+                    window.location.href = option;
+                });
             });
         </script>
     </main>

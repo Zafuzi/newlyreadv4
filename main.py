@@ -149,7 +149,11 @@ def getCategory(category = ""):
         data = r.get(key)
         data = json.loads(data)
         for article in data['articles']:
+            date = article['publishedAt']
+            print(date)
             articles.append(article)
+        articles.sort( key=lambda x: x['publishedAt'])
+        articles.reverse()
     return render_template("category.html", articles = articles, category= category)
 
 
