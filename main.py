@@ -81,6 +81,11 @@ def getNewArticles():
 # def send_scripts(path):
 #     return send_from_directory('scripts', path)
 
+
+@app.route("/get_my_ip", methods=["GET"])
+def get_my_ip():
+    return jsonify({'ip': request.remote_addr}), 200
+
 @app.route('/styles/<path:path>')
 def send_styles(path):
     return send_from_directory('styles', path)
@@ -95,8 +100,10 @@ def getArticle(url = None, category = None):
     url = request.args.get('url')
     url_string = url.replace(':', '')
 
-    print("url:", url)
-    print("url_string:", url_string)
+    try:
+        print(str.format("IP: {0}, Article: {1}", request.remote_addr, url))
+    except:
+        print("ERROR GETTING IP ADDRESS OR KEY")
 
     category = request.args.get('category')
 
@@ -111,7 +118,6 @@ def getArticle(url = None, category = None):
         data = r.get(key)
         data = json.loads(data)
         isHTML = True
-        print(key)
 
     if isHTML:
         title = data['title']
