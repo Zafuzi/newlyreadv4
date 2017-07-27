@@ -101,7 +101,10 @@ def getArticle(url = None, category = None):
     url_string = url.replace(':', '')
 
     try:
-        print(str.format("IP: {0}, Article: {1}", request.remote_addr, url))
+        ip = request.remote_addr
+        if request.headers.getlist("X-Forwarded-For"):
+            ip = request.headers.getlist("X-Forwarded-For")[0]
+        print(str.format("IP: {0}, Article: {1}", ip, url))
     except:
         print("ERROR GETTING IP ADDRESS OR KEY")
 
