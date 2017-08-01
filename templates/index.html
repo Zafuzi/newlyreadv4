@@ -1,6 +1,15 @@
 {% extends "layout.html" %} {% block content %}
-<h1>Index</h1>
-<p class="important">
-    Welcome to NewlyRead
-</p>
+<div class="categories" id="article_container">
+    {% for source in articles %}
+    <a class="card" href="/article?url={{source[ 'url']}}&category={{category}}">
+        <div class="card-content">
+            <img src="{{source[ 'urlToImage']}} " alt="Article Image ">
+            <p>{{source['title']}}</p>
+        </div>
+    </a>{% endfor %}
+</div>
+<script type="text/javascript">
+    var articles = "{{articles}}";
+    var article_container = document.querySelector("#article_container");
+</script>
 {% endblock %}

@@ -1,6 +1,7 @@
 import sched, threading, time, urllib2, json, unirest, redis, datetime
 from flask import Flask, request, render_template, Markup, send_from_directory
 from newspaper import Article
+import random
 
 
 API_KEY = 'ccfdc66609fc4b7b87258020b85d4380'
@@ -12,7 +13,7 @@ articles = []
 app = Flask(__name__)
 app.debug = True
 
-r = redis.StrictRedis(host='localhost', port=6379, db=0)
+r = redis.StrictRedis(host='127.0.0.1', port=6379, db=0)
 s = sched.scheduler(time.time, time.sleep)
 
 rsources = r.get('sources')
@@ -92,14 +93,15 @@ def send_styles(path):
 
 @app.route('/')
 def index():
-    trusted_proxies = {'127.0.0.1'}  # define your own set
-    route = request.access_route + [request.remote_addr]
-
-    remote_addr = next((addr for addr in reversed(route) 
-                        if addr not in trusted_proxies), request.remote_addr)
-
-    print("REMOTE:" + remote_addr)
-    return render_template("index.html", articles = articles)
+    articles = []
+    for key in r.keys(pattern="articles:*"):
+        data = r.get(key)
+        data = json.loads(data)
+        for article in data['articles']:
+            articles.append(article)
+    random.shuffle(articles)
+    return render_template("index.html", articles = articles[0:9], category = "none")
+    
 
 @app.route('/article')
 def getArticle(url = None, category = None):

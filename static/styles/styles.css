@@ -65,10 +65,6 @@ body.reader {
     --font-color: #555;
 }
 
-main.home {
-    --btn-bg: #fff;
-}
-
 a {
     color: var(--btn-bg);
 }
@@ -114,7 +110,7 @@ a {
     z-index: 99;
 }
 
-#sticker nav{
+#sticker nav {
     width: 90%;
     display: flex;
     justify-content: space-around;
