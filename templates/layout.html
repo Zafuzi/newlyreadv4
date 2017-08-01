@@ -8,14 +8,16 @@
 
 <body class="home">
     <header id="sticker">
+        <h1> NEWLYREAD </h1>
         <nav>
-            <h1> NEWLYREAD </h1>
-            <!-- <span>{% block back_btn %} {% endblock %}</span> -->
+            <div class="controls">{% block back_btn %} {% endblock %}</div>
         </nav>
     </header>
     <main class="home" style="margin-top: 4em; margin-bottom: -4em; max-width: 900px;">
+
         <div id="content">
             {% block content %}{% endblock %}
+            <div id="bottom">BOTTOM</div>
         </div>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script src="static/scripts/jquery.sticky.js"></script>
@@ -44,6 +46,8 @@
             ga('create', 'UA-73276036-1', 'auto');
             ga('send', 'pageview');
         </script>
+
+        {% block scripts %}{% endblock %}
     </main>
 </body>
 

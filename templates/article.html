@@ -1,8 +1,8 @@
-{% extends "layout.html" %}
-{% block back_btn %}
-<a class="btn" href="javascript:history.back()">Back</a>
+{% extends "layout.html" %} {% block back_btn %}
+<a class="btn" href="javascript:window.close()">Back</a>
 <a class="btn" href="{{url}}" target="_blank">Original Article</a> {% endblock %} {% block content %}
 <div class="article">
+    <br/>
     <h1>{{title}}</h1>
     <!-- <img src="{{header_image}}" alt="Article Image" /> -->{% if video %} {% for vid in video %}
     <div class="video-container">

@@ -1,8 +1,7 @@
 import sched, threading, time, urllib2, json, unirest, redis, datetime
-from flask import Flask, request, render_template, Markup, send_from_directory
+from flask import Flask, request, render_template, Markup, send_from_directory, session
 from newspaper import Article
 import random
-
 
 API_KEY = 'ccfdc66609fc4b7b87258020b85d4380'
 BASE_URL = 'https://newsapi.org/v1/'
@@ -12,6 +11,7 @@ articles = []
 
 app = Flask(__name__)
 app.debug = True
+app.secret_key = '=\xc9\x88\xc2\xb5\xaa0u\x08\x80P\x00\x07\x81>\x07\xe6\xe0\xa1N\xc1\x19U\x11'
 
 r = redis.StrictRedis(host='127.0.0.1', port=6379, db=0)
 s = sched.scheduler(time.time, time.sleep)
@@ -99,9 +99,25 @@ def index():
         data = json.loads(data)
         for article in data['articles']:
             articles.append(article)
-    random.shuffle(articles)
+    articles = sorted(articles, key=lambda x: x['publishedAt']);
+    session['index'] = 9
     return render_template("index.html", articles = articles[0:9], category = "none")
-    
+
+@app.route('/get10')
+def get10(previousIndex = 9):
+    articles = []
+    for key in r.keys(pattern="articles:*"):
+        data = r.get(key)
+        data = json.loads(data)
+        for article in data['articles']:
+            articles.append(article)
+    articles = sorted(articles, key=lambda x: x['publishedAt']);
+    previousIndex = int(request.args.get('previousIndex'))
+    previousIndex = previousIndex + 1
+    session['index'] = previousIndex + 9
+    i = session.get('index')
+    p = previousIndex
+    return json.dumps( {"articles": json.dumps(articles[p:i])} )
 
 @app.route('/article')
 def getArticle(url = None, category = None):
@@ -144,6 +160,7 @@ def getArticle(url = None, category = None):
             article = Article(url, keep_article_html=True)
             article.download()
             article.parse()
+            title = article.title
             html = article.article_html
             img = article.top_image
             movies = article.movies

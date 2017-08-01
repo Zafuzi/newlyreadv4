@@ -1,15 +1,94 @@
 {% extends "layout.html" %} {% block content %}
 <div class="categories" id="article_container">
-    {% for source in articles %}
-    <a class="card" href="/article?url={{source[ 'url']}}&category={{category}}">
+    <!-- {% for source in articles %}
+    <a class="card" href="/article?url={{source[ 'url']}}&category={{category}}" target="_blank">
         <div class="card-content">
             <img src="{{source[ 'urlToImage']}} " alt="Article Image ">
             <p>{{source['title']}}</p>
         </div>
-    </a>{% endfor %}
+    </a>{% endfor %} -->
 </div>
+
+{% endblock %} {% block scripts %}
 <script type="text/javascript">
-    var articles = "{{articles}}";
+    var articles = "{{session['articles']}}";
     var article_container = document.querySelector("#article_container");
+    var bottom = document.querySelector("#bottom");
+    index = 0;
+
+    get10();
+
+    didScroll = false;
+
+    window.onscroll = function(ev) {
+        didScroll = true;
+    };
+
+    setInterval(function() {
+        if (didScroll) {
+            didScroll = false;
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                get10();
+            }
+        }
+    }, 250);
+
+    function get10() {
+        index = index + 9;
+        fetch("/get10?previousIndex=" + index)
+            .then(response => {
+                if (response.ok) return response.json();
+            })
+            .then(json => {
+                articles = JSON.parse(json.articles);
+                for (var i = 0; i < articles.length; i++) {
+                    var card = document.createElement("a");
+                    card.classList.add('card');
+                    card.setAttribute('href', '/article?url=' + articles[i].url + '&category=none')
+                    card.setAttribute('target', '_blank')
+
+                    var card_content = document.createElement("div");
+                    card_content.classList.add('card-content');
+
+                    var img = document.createElement('img');
+                    img.setAttribute('src', articles[i].urlToImage);
+
+                    var title = document.createElement("p");
+                    title.appendChild(document.createTextNode(articles[i].title));
+
+                    var source = document.createElement("p");
+                    source.classList.add("source");
+                    var domain = extractHostname(articles[i].url);
+                    source.appendChild(document.createTextNode(domain));
+
+                    card_content.appendChild(img);
+                    card_content.appendChild(source);
+                    card_content.appendChild(title);
+
+
+                    card.appendChild(card_content);
+
+                    article_container.appendChild(card);
+                }
+            })
+    }
+
+    function extractHostname(url) {
+        var hostname;
+        //find & remove protocol (http, ftp, etc.) and get hostname
+
+        if (url.indexOf("://") > -1) {
+            hostname = url.split('/')[2];
+        } else {
+            hostname = url.split('/')[0];
+        }
+
+        //find & remove port number
+        hostname = hostname.split(':')[0];
+        //find & remove "?"
+        hostname = hostname.split('?')[0];
+
+        return hostname;
+    }
 </script>
 {% endblock %}
