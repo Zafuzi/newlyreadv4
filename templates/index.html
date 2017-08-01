@@ -59,7 +59,7 @@
                     var source = document.createElement("p");
                     source.classList.add("source");
                     var domain = extractHostname(articles[i].url);
-                    source.appendChild(document.createTextNode(domain));
+                    source.appendChild(document.createTextNode(domain + ' - ' + articles[i].publishedAt));
 
                     card_content.appendChild(img);
                     card_content.appendChild(source);

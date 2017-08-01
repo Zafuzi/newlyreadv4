@@ -100,6 +100,7 @@ def index():
         for article in data['articles']:
             articles.append(article)
     articles = sorted(articles, key=lambda x: x['publishedAt']);
+    articles.reverse()
     session['index'] = 9
     return render_template("index.html", articles = articles[0:9], category = "none")
 
@@ -111,7 +112,8 @@ def get10(previousIndex = 9):
         data = json.loads(data)
         for article in data['articles']:
             articles.append(article)
-    articles = sorted(articles, key=lambda x: x['publishedAt']);
+    articles = sorted(articles, key=lambda x: x['publishedAt'])
+    articles.reverse()
     previousIndex = int(request.args.get('previousIndex'))
     previousIndex = previousIndex + 1
     session['index'] = previousIndex + 9
