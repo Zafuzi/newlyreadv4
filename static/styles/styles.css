@@ -143,14 +143,44 @@ a {
     margin: 0;
 }
 
-#sticker nav {
-    width: 90%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-flow: row wrap;
-    padding: 0 1em;
-    margin: auto;
+.dropdown {
+    position: relative;
+    display: inline-block;
+    transition: all .3s;
+}
+
+.dropdown-content {
+    transition: all .3s;
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    padding: 0;
+    z-index: 99;
+    margin: -1em -3em;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.dropdown-content ul li {
+    width: 100%;
+}
+
+.dropdown-content ul li a {
+    width: 100%;
+    padding: .25em;
+    display: block;
+    text-decoration: none;
 }
 
 h1,

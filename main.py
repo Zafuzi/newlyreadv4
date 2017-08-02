@@ -77,11 +77,10 @@ def getNewArticles():
     else:
         check_timestamp()
         print("Got new sources")
-
-# @app.route('/scripts/<path:path>')
-# def send_scripts(path):
-#     return send_from_directory('scripts', path)
-
+    try:
+        threading.Timer(1200, getNewArticles).start()
+    except (KeyboardInterrupt, SystemExit):
+        sys.exit()
 
 @app.route("/get_my_ip", methods=["GET"])
 def get_my_ip():
@@ -195,14 +194,8 @@ def getCategory(category = ""):
         articles.reverse()
     return render_template("category.html", articles = articles, category= category)
 
-
-def func1():
-    t = threading.Thread(target=getNewArticles)
-    t.start()
-    getNewArticles()
-
 def main():
-    func1()
+    getNewArticles()
     app.run(host= '0.0.0.0', port=5000)
 
 if __name__ == "__main__":
