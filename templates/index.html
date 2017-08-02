@@ -13,13 +13,16 @@
 
     didScroll = false;
 
-    window.onscroll = function(ev) {
+    window.onscroll = function (ev) {
         didScroll = true;
     };
 
-    setInterval(function() {
+    setInterval(function () {
         if (didScroll) {
             didScroll = false;
+            console.log("INNER: " + window.innerHeight);
+            console.log("SCROLL: " + window.scrollY);
+            console.log("OFFSET: " + document.body.offsetHeight);
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
                 get10();
             }

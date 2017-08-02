@@ -1,4 +1,11 @@
-import sched, threading, time, urllib2, json, unirest, redis, datetime
+import sched
+import threading
+import time
+import urllib2
+import json
+import unirest
+import redis
+import datetime
 from flask import Flask, request, render_template, Markup, send_from_directory, session
 from newspaper import Article
 import random
@@ -11,13 +18,14 @@ articles = []
 
 app = Flask(__name__)
 app.debug = True
-app.secret_key = '=\xc9\x88\xc2\xb5\xaa0u\x08\x80P\x00\x07\x81>\x07\xe6\xe0\xa1N\xc1\x19U\x11'
+app.secret_key = '\x1dv\x86\xcedW\xd6\xea\xfe\x92\xd5\xbb\x80\xadYn\x14>\xa8\x06\xd8(\x19\xf6'
 
 r = redis.StrictRedis(host='127.0.0.1', port=6379, db=0)
 s = sched.scheduler(time.time, time.sleep)
 
 rsources = r.get('sources')
 rtimestamp = None
+
 
 def get_sources():
     sources = urllib2.urlopen(BASE_URL + "/sources?language=en").read()
@@ -33,13 +41,16 @@ def add_to_articles(response):
         for source in rsources:
             if source['id'] == response.body['source']:
                 category = source['category']
-                r.set('articles:' + category + ":" + response.body['source'], json.dumps(response.body))
+                r.set('articles:' + category + ":" +
+                      response.body['source'], json.dumps(response.body))
     else:
         print(response.code)
+
 
 def set_timestamp():
     now = datetime.datetime.now()
     r.set('sources_timestamp', now.month)
+
 
 def check_timestamp():
     rtimestamp = r.get('sources_timestamp')
@@ -62,6 +73,7 @@ def check_timestamp():
         get_sources()
     print("Timestamp OK")
 
+
 def getNewArticles():
     print("Getting new articles")
     rsources = r.get('sources')
@@ -72,23 +84,21 @@ def getNewArticles():
         check_timestamp()
         for source in rsources:
             response = unirest.get(BASE_URL + "/articles?apikey=" + API_KEY,
-                                headers={ "Accept": "application/json" }, params={ "source": source['id']},
-                                callback = add_to_articles)
+                                   headers={"Accept": "application/json"}, params={"source": source['id']},
+                                   callback=add_to_articles)
     else:
         check_timestamp()
         print("Got new sources")
-    try:
-        threading.Timer(1200, getNewArticles).start()
-    except (KeyboardInterrupt, SystemExit):
-        sys.exit()
+    # try:
+    #     threading.Timer(1200, getNewArticles).start()
+    # except (KeyboardInterrupt, SystemExit):
+    #     sys.exit()
 
-@app.route("/get_my_ip", methods=["GET"])
-def get_my_ip():
-    return jsonify({'ip': request.remote_addr}), 200
 
 @app.route('/styles/<path:path>')
 def send_styles(path):
     return send_from_directory('styles', path)
+
 
 @app.route('/')
 def index():
@@ -98,13 +108,16 @@ def index():
         data = json.loads(data)
         for article in data['articles']:
             articles.append(article)
-    articles = sorted(articles, key=lambda x: x['publishedAt']);
+    articles = sorted(articles, key=lambda x: x['publishedAt'])
     articles.reverse()
     session['index'] = 9
-    return render_template("index.html", articles = articles[0:9], category = "none")
+    return render_template("index.html", articles=articles[0:9], category="none")
+
 
 @app.route('/get10')
-def get10(previousIndex = 9):
+def get10(previousIndex=9):
+    print("OK")
+
     articles = []
     for key in r.keys(pattern="articles:*"):
         data = r.get(key)
@@ -113,15 +126,17 @@ def get10(previousIndex = 9):
             articles.append(article)
     articles = sorted(articles, key=lambda x: x['publishedAt'])
     articles.reverse()
+
     previousIndex = int(request.args.get('previousIndex'))
     previousIndex = previousIndex + 1
     session['index'] = previousIndex + 9
     i = session.get('index')
     p = previousIndex
-    return json.dumps( {"articles": json.dumps(articles[p:i])} )
+    return json.dumps({"articles": json.dumps(articles[p:i])})
+
 
 @app.route('/article')
-def getArticle(url = None, category = None):
+def getArticle(url=None, category=None):
     url = request.args.get('url')
     url_string = url.replace(':', '')
 
@@ -167,18 +182,19 @@ def getArticle(url = None, category = None):
             movies = article.movies
             print("CATEGROY: ", category)
             print("Title: ", article.title)
-            r.set('html:' + category + ":" + url_string, 
-                            json.dumps({"title": title, "html": html, "img": img, "movies": movies}))
+            r.set('html:' + category + ":" + url_string,
+                  json.dumps({"title": title, "html": html, "img": img, "movies": movies}))
 
     return render_template("article.html",
-                            url = url,
-                            title = title, 
-                            body = Markup(html), 
-                            header_image = img,
-                            video = movies)
+                           url=url,
+                           title=title,
+                           body=Markup(html),
+                           header_image=img,
+                           video=movies)
+
 
 @app.route('/category')
-def getCategory(category = ""):
+def getCategory(category=""):
     category = request.args.get('cat')
     print(len(r.keys(pattern="articles:" + category + ":*")))
     articles = []
@@ -190,14 +206,15 @@ def getCategory(category = ""):
             date = article['publishedAt']
             print(date)
             articles.append(article)
-        articles.sort( key=lambda x: x['publishedAt'])
+        articles.sort(key=lambda x: x['publishedAt'])
         articles.reverse()
-    return render_template("category.html", articles = articles, category= category)
+    return render_template("category.html", articles=articles, category=category)
+
 
 def main():
     getNewArticles()
-    app.run(host= '0.0.0.0', port=5000)
+    app.run(host='localhost', port=3000)
+
 
 if __name__ == "__main__":
     main()
-
