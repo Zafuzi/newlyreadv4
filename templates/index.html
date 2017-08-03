@@ -5,32 +5,35 @@
 {% endblock %} {% block scripts %}
 <script type="text/javascript">
     var articles = "{{session['articles']}}";
+
+    if (!localStorage.getItem('index')) {
+        localStorage.setItem('index', "{{session.get('index')}}");
+    }
+
+    var index = parseInt(localStorage.getItem('index'));
     var article_container = document.querySelector("#article_container");
     var bottom = document.querySelector("#bottom");
-    index = 0;
 
-    get10();
+    get10(0);
 
     didScroll = false;
 
-    window.onscroll = function (ev) {
+    window.onscroll = function(ev) {
         didScroll = true;
     };
 
-    setInterval(function () {
+    setInterval(function() {
         if (didScroll) {
             didScroll = false;
-            console.log("INNER: " + window.innerHeight);
-            console.log("SCROLL: " + window.scrollY);
-            console.log("OFFSET: " + document.body.offsetHeight);
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
                 get10();
             }
         }
     }, 250);
 
-    function get10() {
+    function get10(startIndex) {
         index = index + 9;
+
         fetch("/get10?previousIndex=" + index)
             .then(response => {
                 if (response.ok) return response.json();
@@ -41,7 +44,7 @@
                     var card = document.createElement("a");
                     card.classList.add('card');
                     card.setAttribute('href', '/article?url=' + articles[i].url + '&category=none')
-                    card.setAttribute('target', '_blank')
+                        //card.setAttribute('target', '_blank')
 
                     var card_content = document.createElement("div");
                     card_content.classList.add('card-content');

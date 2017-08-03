@@ -9,22 +9,8 @@
 <body class="home">
     <header id="sticker">
         <h1 style="width: 100%; text-align:center;"> <a href="/" style="text-decoration: none;">NEWLYREAD</a> </h1>
-        <nav class="dropdown">
-            <span style="display: block; margin: .5em">Filter</span>
-            <div class="dropdown-content">
-                <ul>
-                    <li><a href="/category?cat=business">Business</a></li>
-                    <li><a href="/category?cat=entertainment">Entertainment</a></li>
-                    <li><a href="/category?cat=gaming">Gaming</a></li>
-                    <li><a href="/category?cat=general">General</a></li>
-                    <li><a href="/category?cat=music">Music</a></li>
-                    <li><a href="/category?cat=politics">Politics</a></li>
-                    <li><a href="/category?cat=science-and-nature">Science and Nature</a></li>
-                    <li><a href="/category?cat=sport">Sports</a></li>
-                    <li><a href="/category?cat=technology">Technology</a></li>
-                </ul>
-                <div class="controls">{% block back_btn %} {% endblock %}</div>
-            </div>
+        <nav>
+            <div class="controls">{% block back_btn %} {% endblock %}</div>
         </nav>
     </header>
     <main class="home">
@@ -32,18 +18,17 @@
             {% block content %}{% endblock %}
             <div id="bottom"></div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script src="static/scripts/jquery.sticky.js"></script>
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 var sticky = new Sticky('#sticker');
             });
         </script>
         <script defer>
-            (function (i, s, o, g, r, a, m) {
+            (function(i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r;
-                i[r] = i[r] || function () {
+                i[r] = i[r] || function() {
                     (i[r].q = i[r].q || []).push(arguments)
                 }, i[r].l = 1 * new Date();
                 a = s.createElement(o),

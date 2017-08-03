@@ -115,9 +115,7 @@ def index():
 
 
 @app.route('/get10')
-def get10(previousIndex=9):
-    print("OK")
-
+def get10(previousIndex=0):
     articles = []
     for key in r.keys(pattern="articles:*"):
         data = r.get(key)
@@ -130,7 +128,9 @@ def get10(previousIndex=9):
     previousIndex = int(request.args.get('previousIndex'))
     previousIndex = previousIndex + 1
     session['index'] = previousIndex + 9
+
     i = session.get('index')
+    print(i);
     p = previousIndex
     return json.dumps({"articles": json.dumps(articles[p:i])})
 
@@ -213,7 +213,7 @@ def getCategory(category=""):
 
 def main():
     getNewArticles()
-    app.run(host='localhost', port=3000)
+    app.run(host='localhost', port=5000)
 
 
 if __name__ == "__main__":
